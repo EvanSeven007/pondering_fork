@@ -16,14 +16,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//! The main UCI procedure.
-//!
-//! This code handles the central logic of actually running an engine.
-//! To keep the engine responsive, a new thread is created to process each time-intensive command
-//! sent from the GUI.
-//!
-//! Many of the details of concurrency required to achieve this are finicky; I am hopeful that we
-//! can develop more elegant solutions in the future.
+// ! The main UCI procedure.
+// !
+// ! This code handles the central logic of actually running an engine.
+// ! To keep the engine responsive, a new thread is created to process each time-intensive command
+// ! sent from the GUI.
+// !
+// ! Many of the details of concurrency required to achieve this are finicky; I am hopeful that we
+// ! can develop more elegant solutions in the future.
 
 use std::{
     io::stdin,
@@ -145,7 +145,14 @@ fn main() {
                     stop(&searcher, search_handle, debug);
                     search_handle = None;
                 }
-                Command::PonderHit => todo!(),
+                Command::PonderHit => {
+                    //stop thinking on ponder
+                    
+                    //stop(&searcher, search_handle, debug);
+                    let mut write = searcher.write().unwrap();
+                    write.config.depth = write.config.depth - 1;
+
+                },
                 Command::Quit => {
                     // stop the ongoing search
                     stop(&searcher, search_handle, debug);
